@@ -1,6 +1,6 @@
-package com.netflix.search.autocomplete;
+package com.search.autocomplete;
 
-import com.netflix.search.autocomplete.trie.Trie;
+import com.search.autocomplete.trie.Trie;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

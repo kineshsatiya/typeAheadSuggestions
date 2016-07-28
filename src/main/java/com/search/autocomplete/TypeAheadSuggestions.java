@@ -1,7 +1,7 @@
-package com.netflix.search.autocomplete;
+package com.search.autocomplete;
 
-import com.netflix.search.autocomplete.trie.TST;
-import com.netflix.search.autocomplete.trie.Trie;
+import com.search.autocomplete.trie.TST;
+import com.search.autocomplete.trie.Trie;
 
 import java.util.Scanner;
 

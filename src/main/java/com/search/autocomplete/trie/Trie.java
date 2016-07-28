@@ -1,4 +1,4 @@
-package com.netflix.search.autocomplete.trie;
+package com.search.autocomplete.trie;
 
 import java.util.List;
 

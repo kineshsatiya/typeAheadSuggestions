@@ -1,5 +1,6 @@
-package com.netflix.search.autocomplete.trie;
+package trie;
 
+import com.search.autocomplete.trie.MovieNameNode;
 import org.junit.Assert;
 import org.junit.Test;
 

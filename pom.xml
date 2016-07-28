@@ -38,7 +38,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.netflix.search.autocomplete.TypeAheadSuggestions</mainClass>
+                            <mainClass>com.search.autocomplete.TypeAheadSuggestions</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
