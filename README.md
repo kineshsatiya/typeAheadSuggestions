@@ -1,2 +1,3 @@
 # typeAheadSuggestions
-Java based type ahead suggestions (autocomplete)
+Java based type ahead suggestions (autocomplete).
+Steps to generate & query data - 
