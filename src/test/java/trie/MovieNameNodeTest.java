@@ -1,5 +1,6 @@
 package trie;
 
+import com.search.autocomplete.trie.MovieNameComparator;
 import com.search.autocomplete.trie.MovieNameNode;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,7 +9,7 @@ public class MovieNameNodeTest {
 
     @Test
     public void testAddWord() {
-        MovieNameNode movieNameNode = new MovieNameNode('s', 2);
+        MovieNameNode movieNameNode = new MovieNameNode('s', 2, new MovieNameComparator("\t"));
         //check empty node
         Assert.assertArrayEquals(new String[]{}, movieNameNode.getValues());
 

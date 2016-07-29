@@ -10,6 +10,12 @@ public interface Node {
 
     Node getRight();
 
+    void setLeft(Node n);
+
+    void setMid(Node n);
+
+    void setRight(Node n);
+
     void addValue(String value);
 
     String[] getValues();

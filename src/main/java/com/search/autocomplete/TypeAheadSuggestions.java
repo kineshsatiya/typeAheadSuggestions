@@ -3,7 +3,10 @@ package com.search.autocomplete;
 import com.search.autocomplete.trie.TST;
 import com.search.autocomplete.trie.Trie;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Exchanger;
 
 public class TypeAheadSuggestions {
 
@@ -15,13 +18,15 @@ public class TypeAheadSuggestions {
     private static final String MOVIE_NAME_SEPARATOR = " ";
 
     private Trie trie;
+    private List<Thread> ingestionThreads;
 
     public TypeAheadSuggestions(Trie trie) {
         this.trie = trie;
+        ingestionThreads = new ArrayList<>();
     }
 
     private void processFile(String[] args) {
-        String[] filenames = new String[args.length];
+        String[] filenames = new String[args.length - 1];
         int index = 0;
         StringBuilder builder = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
@@ -30,7 +35,21 @@ public class TypeAheadSuggestions {
             builder.append(args[i] + " ");
         }
         System.out.println(PROCESS_FILE + " " + builder.toString());
-        (new Thread(new TrieIngestion(trie, filenames, LINE_VALUE_SEPARATOR, MOVIE_NAME_SEPARATOR))).start();
+        Thread t = new Thread(new TrieIngestion(trie, filenames, LINE_VALUE_SEPARATOR, MOVIE_NAME_SEPARATOR));
+        ingestionThreads.add(t);
+        t.start();
+    }
+
+    private void stopAll() {
+        ingestionThreads.stream().forEach(t -> {
+            try {
+                if (t.isAlive()) {
+                    t.join();// if ingestion thread is alive, then wait for it to complete
+                }
+            } catch (Exception e) {
+                System.out.println("Exception when waiting for ingestion thread msg=" + e.getMessage());
+            }
+        });
     }
 
     private void query(String[] args) {
@@ -53,11 +72,13 @@ public class TypeAheadSuggestions {
 
             command = scanner.nextLine();
         }
+        System.out.println(QUIT);
+        stopAll();
     }
 
     public static void main(String[] args) {
 
-        Trie trie = new TST(10);
+        Trie trie = new TST(10, LINE_VALUE_SEPARATOR);
         TypeAheadSuggestions autocomplete = new TypeAheadSuggestions(trie);
         autocomplete.start();
     }

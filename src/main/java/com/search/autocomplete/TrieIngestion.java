@@ -24,15 +24,22 @@ public class TrieIngestion implements Runnable {
     @Override
     public void run() {
         try {
-            for (String file : filenames) {
-                InputStream inputStream = new FileInputStream(file);
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String line = bufferedReader.readLine();
-                while (line != null) {
-                    String args[] = line.split(lineValueSeparator);
-                    String movieName = args[2];
-                    getMovieKeys(movieName).stream().forEach(key -> trie.insert(key, line));
+            for (String file : this.filenames) {
+                if (file != null) {
+                    InputStream inputStream = new FileInputStream(new File(file));
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                    String line = bufferedReader.readLine();
+                    while (line != null) {
+                        String args[] = line.split(lineValueSeparator);
+                        if (args.length == 3) {
+                            String movieName = args[2];
+                            for (String key : getMovieNameKeys(movieName)) {
+                                trie.insert(key, line);
+                            }
+                        }
+                        line = bufferedReader.readLine();
+                    }
                 }
             }
         } catch (FileNotFoundException fileNotFoundException) {
@@ -44,20 +51,27 @@ public class TrieIngestion implements Runnable {
 
     /**
      * Utility method to generate all keys from a movie name.
+     * "Star Troopers" -> ["Star Troopers", "Troopers"]
      *
      * @param movieName
      * @return
      */
-    private List<String> getMovieKeys(String movieName) {
+    public List<String> getMovieNameKeys(String movieName) {
         List<String> allKeys = new ArrayList<>();
-        String[] args = movieName.split(movieNameSeparator);
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            for (int j = i; j < args.length; j++) {
-                builder.append(args[j]);
+        if (movieName != null && movieName.length() > 0) {
+            String[] args = movieName.split(movieNameSeparator);
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < args.length; i++) {
+                for (int j = i; j < args.length; j++) {
+                    if (j == (args.length - 1)) {
+                        builder.append(args[j]);
+                    } else {
+                        builder.append(args[j] + movieNameSeparator);
+                    }
+                }
+                allKeys.add(builder.toString());
+                builder = new StringBuilder();
             }
-            allKeys.add(builder.toString());
-            builder = new StringBuilder();
         }
         return allKeys;
     }
